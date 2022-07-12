@@ -26,9 +26,9 @@ import java.util.Set;
         @Index( columnList = "createdBy") ,
 
 })
-@EntityListeners(AuditingEntityListener.class)
+//@EntityListeners(AuditingEntityListener.class)
 @Entity
-public class Article{
+public class Article extends AuditingFields {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,11 +43,14 @@ public class Article{
     //참조를 끊어줘야한다.
     private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
 
-    @CreatedDate @Column(nullable = false) private LocalDateTime createdAt;    //생성시간
-    @CreatedBy @Column(nullable = false, length = 100) private String createdBy;           //생성자
-    @LastModifiedDate @Column(nullable = false) private LocalDateTime modifiedAt;   //수정시간
-    @LastModifiedBy @Column(nullable = false, length = 100) private String modifiedBy;          //수정자
+//    @CreatedDate @Column(nullable = false) private LocalDateTime createdAt;    //생성시간
+//    @CreatedBy @Column(nullable = false, length = 100) private String createdBy;           //생성자
+//    @LastModifiedDate @Column(nullable = false) private LocalDateTime modifiedAt;   //수정시간
+//    @LastModifiedBy @Column(nullable = false, length = 100) private String modifiedBy;          //수정자
 
+//    @MappedSuperclass
+//    @Embedded AAA aa;
+//    class AAA {}
     protected Article() {
     }
 
