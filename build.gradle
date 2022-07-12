@@ -19,6 +19,9 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest' //rest-api를 사용하기 쉽게 만드는 라이브러리
+	implementation 'org.springframework.data:spring-data-rest-hal-explorer'	//rest-api를 테스트할 수 있게 해주는 라이브러리
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	runtimeOnly 'mysql:mysql-connector-java'
