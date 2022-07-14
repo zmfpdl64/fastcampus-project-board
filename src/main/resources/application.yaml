@@ -19,7 +19,7 @@ spring:
 
   jpa:
     defer-datasource-initialization: true
-    hibernate.ddl-auto: none
+    hibernate.ddl-auto: create
     show-sql: true
     properties:
       hibernate.format_sql: true
@@ -29,6 +29,9 @@ spring:
   data.rest:
     base-path: /api
     detection-strategy: annotated
+  thymeleaf3:
+    decoupled-login: true
+
 #================================================================
 
 #debug: false

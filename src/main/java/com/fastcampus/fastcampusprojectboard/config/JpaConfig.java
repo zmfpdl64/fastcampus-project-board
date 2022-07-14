@@ -1,4 +1,4 @@
-package com.fastcampus.fastcampusprojectboard;
+package com.fastcampus.fastcampusprojectboard.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
