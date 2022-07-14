@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Disabled("Spring Data Rest 통합테스트는 불필요하므로 제외시킴")
@@ -38,6 +38,7 @@ public class DataRestTest {
 
         //Then
     }
+
     @DisplayName("[api] 게시글 단건 조회")
     @Test
     void givenNothing_whenRequestSingleArticle_thenReturnsArticlesJsonResponse() throws Exception {
@@ -63,6 +64,7 @@ public class DataRestTest {
 
         //Then
     }
+
     @DisplayName("[api] 댓글 리스트 조회")
     @Test
     void givenNothing_whenRequestArticlesComments_thenReturnsArticleCommentsJsonResponse() throws Exception {
@@ -75,6 +77,7 @@ public class DataRestTest {
 
         //Then
     }
+
     @DisplayName("[api] 댓글 단건 조회")
     @Test
     void givenNothing_whenRequestArticlesComment_thenReturnsArticlesCommentJsonResponse() throws Exception {
@@ -88,6 +91,19 @@ public class DataRestTest {
         //Then
     }
 
+    @DisplayName("[api] 사용자 리스트 조회")
+    @Test
+    void givenNothing_whenRequestUserAccounts_thenThrowException() throws Exception {
+//Given
 
+//When
+        mvc.perform(get("/api/userAccounts")).andExpect(status().isNotFound());
+        mvc.perform(post("/api/userAccounts")).andExpect(status().isNotFound());
+        mvc.perform(put("/api/userAccounts")).andExpect(status().isNotFound());
+        mvc.perform(patch("/api/userAccounts")).andExpect(status().isNotFound());
+        mvc.perform(delete("/api/userAccounts")).andExpect(status().isNotFound());
+        mvc.perform(head("/api/userAccounts")).andExpect(status().isNotFound());
+//Then
 
+    }
 }
