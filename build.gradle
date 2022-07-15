@@ -46,6 +46,9 @@ dependencies {
 	//서버사이드 렌더링 템플릿 타임리프
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	//security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 
 }
 
