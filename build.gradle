@@ -19,22 +19,61 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-rest' //rest-api를 사용하기 쉽게 만드는 라이브러리
-	implementation 'org.springframework.data:spring-data-rest-hal-explorer'	//rest-api를 테스트할 수 있게 해주는 라이브러리
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	runtimeOnly 'mysql:mysql-connector-java'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	//엑츄에이터
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	//jpa
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	//security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+	testImplementation 'org.springframework.security:spring-security-test'
+
+	//타임리프
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	//web start
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	//hal rest api helper
+	implementation 'org.springframework.data:spring-data-rest-hal-explorer' //rest-api를 사용하기 쉽게 만드는 라이브러리
+	//데이터 레포지토리
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest' //rest-api를 테스트할 수 있게 해주는 라이브러리
+
+	//getter setter helper
 	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
 
-	runtimeOnly 'com.h2database:h2'
 
+	//내부 db
+	runtimeOnly 'com.h2database:h2'
+	//마이sql db
+	runtimeOnly 'mysql:mysql-connector-java'
+	//사용자 지정 yaml 설정
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+	//스타터
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	//동작 helper
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+//	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+//	implementation 'org.springframework.data:spring-data-rest-hal-explorer'
+//	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//	implementation 'org.springframework.boot:spring-boot-starter-web'
+//	runtimeOnly 'mysql:mysql-connector-java'
+//	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+//	implementation 'org.springframework.boot:spring-boot-starter-web'
+//	compileOnly 'org.projectlombok:lombok'
+//	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+//	annotationProcessor 'org.projectlombok:lombok'
+//
+//	runtimeOnly 'com.h2database:h2'
+//
+//	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
 	implementation 'com.querydsl:querydsl-jpa'
 	implementation 'com.querydsl:querydsl-core'
@@ -43,12 +82,11 @@ dependencies {
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"	// java.lang.NoClassDfFoundError (javax.annotation.Generated) 대응 코드
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api" // java.lang.NoClassDefFoundError (javax.annotation.Entity) 대응 코드
 
-	//서버사이드 렌더링 템플릿 타임리프
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	//security
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+//	//서버사이드 렌더링 템플릿 타임리프
+//	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+//	//security
+//	implementation 'org.springframework.boot:spring-boot-starter-security'
+//	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 
 }
 
