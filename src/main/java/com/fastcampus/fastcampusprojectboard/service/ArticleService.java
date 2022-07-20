@@ -1,17 +1,15 @@
 package com.fastcampus.fastcampusprojectboard.service;
 
-import com.fastcampus.fastcampusprojectboard.domain.Article;
 import com.fastcampus.fastcampusprojectboard.domain.type.SearchType;
 import com.fastcampus.fastcampusprojectboard.dto.ArticleDto;
-import com.fastcampus.fastcampusprojectboard.dto.UpdateArticleDto;
+import com.fastcampus.fastcampusprojectboard.dto.ArticleWithCommentsDto;
 import com.fastcampus.fastcampusprojectboard.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 @Service
@@ -21,18 +19,19 @@ public class ArticleService {
 
 
     @Transactional(readOnly = true)
-    public Page<ArticleDto> searchArticles(SearchType title, String search_keyword) {
+    public Page<ArticleDto> searchArticles(SearchType searchType, String searchkeyword, Pageable pageable) {
         return Page.empty();
     }
 
-    public ArticleDto searchArticle(long l) {
+    @Transactional(readOnly = true)
+    public ArticleWithCommentsDto getArticle(Long articleId) {
         return null;
     }
 
     public void saveArticle(ArticleDto dto) {
     }
 
-    public void updateArticle(long l, UpdateArticleDto updateDto) {
+    public void updateArticle(ArticleDto dto) {
 
     }
 
