@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Getter
-@ToString
+@ToString(callSuper = true)
 @Table(indexes = {
         @Index( columnList = "title") ,
         @Index( columnList = "hashtag") ,
@@ -26,12 +26,13 @@ public class Article extends AuditingFields {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Setter @ManyToOne(optional = false) private UserAccount userAccount;
     @Setter @Column(nullable = false) private String title;   //제목
     @Setter @Column(nullable = false, length = 10000) private String content; //본문
 
     @Setter private String hashtag; //해시태그
 
-    @OrderBy("id")
+    @OrderBy("createdAt desc")
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     @ToString.Exclude //양방향 참조에서는 서로 연쇄되서 무한으로 참조하는 현상이 일어나 이것을 해결하기 위해 한쪽이
     //참조를 끊어줘야한다.
@@ -48,13 +49,14 @@ public class Article extends AuditingFields {
     protected Article() {
     }
 
-    private Article(String title, String content, String hashtag) {
+    private Article(UserAccount userAccount ,String title, String content, String hashtag) {
+        this.userAccount = userAccount;
         this.title = title;
         this.content = content;
         this.hashtag = hashtag;
     }
-    public static Article of (String title, String content, String hashtag) {
-        return new Article(title, content, hashtag);
+    public static Article of (UserAccount userAccount ,String title, String content, String hashtag) {
+        return new Article(userAccount, title, content, hashtag);
     }
 
     @Override   //지금 막 만든 영속화 되지 않은 entity는 모두 동등성 검사는 탈락한다.
