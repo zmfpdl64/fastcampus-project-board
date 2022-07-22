@@ -65,7 +65,7 @@
 
             <tbody th:each="article : ${articles}">
             <tr>
-                <td ><ath:text="${article.title()}" th:href="@{'/articles/'+${article.id}}">렌더링 안됨</a></td>
+                <td ><a th:text="${article.title()}" th:href="@{'/articles/'+${article.id}}">렌더링 안됨</a></td>
                 <td th:text="${article.hashtag()}" >#java</td>
                 <td th:text="${article.nickname()}">#woojin</td>
                 <td th:text="${#temporals.format(article.createdAt(), 'yyyy-MM-dd')}">2022-07-14</td>

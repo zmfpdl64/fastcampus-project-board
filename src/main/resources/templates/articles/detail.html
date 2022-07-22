@@ -13,23 +13,23 @@
 <body>
 
     <header id="header"  th:replace="header :: header"></header>
-    <main class="container">
+    <main th:object="${article}" class="container">
         <header class="py-5 text-center">
-            <h1>첫번째 글</h1>
+            <h1 th:text="*{title}">첫번째 글</h1>
         </header>
 
         <div class="row g-5">
             <section class="col-md-5 col-lg-4 order-md-last">
                 <aside>
-                    <p><span class="nick-name">Uno</span></p>
-                    <p><a class="u-url" rel="me" href="mailto:djkehh@gmail.com">uno@mail.com</a></p>
-                    <p><time datetime="2022-01-01T00:00:00">2022-01-01</time></p>
-                    <p>#java</p>
+                    <p><span th:text="*{nickname}" class="nick-name">Uno</span></p>
+                    <p><a th:text="*{email}" class="u-url" rel="me" href="mailto:djkehh@gmail.com">uno@mail.com</a></p>
+                    <p><time th:datetime="*{createdAt}" th:text="*{#temporals.format(createdAt(), 'yyyy-MM-dd')}" datetime="2022-01-01T00:00:00">2022-01-01</time></p>
+                    <p><a th:text="*{hashtag()}"></a>#java</p>
                 </aside>
             </section>
 
             <article class="col-md-7 col-lg-8">
-                <p>본문<br><br></p>
+                <p th:text="*{content()}">본문<br><br></p>
             </article>
         </div>
 
@@ -46,38 +46,18 @@
                     </div>
                 </form>
            </section>
-            <ul>
-                <li>
+            <ul th:each="comment : ${articleComments}">
+                <li th:object="${comment}">
                     <div>
-                        <time><small>2022-07-14</small></time>
-                        <strong>Woojin</strong>
-                        <p>
-                            woojin ipsum dolor sit amet, consectetur
-                            Lorem ipsum dolor sit amet
-                        </p>
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        <time><small>2022-07-14</small></time>
-                        <strong>Woojin</strong>
-                        <p>
-                            woojin ipsum dolor sit amet, consectetur
-                            Lorem ipsum dolor sit amet
-                        </p>
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        <time><small>2022-07-14</small></time>
-                        <strong>Woojin</strong>
-                        <p>
-                            woojin ipsum dolor sit amet, consectetur
-                            Lorem ipsum dolor sit amet
-                        </p>
-                    </div>
-                </li>
+                        <strong th:text="*{nickname()}">Woojin</strong>
+                        <time><small th:datetime="*{createdAt()}" th:text="*{#temporals.format(createdAt(),'yyyy-MM-dd HH:mm:ss')}">2022-07-14</small></time>
 
+                        <p th:text="*{content()}">
+                            woojin ipsum dolor sit amet, consectetur
+                            Lorem ipsum dolor sit amet
+                        </p>
+                    </div>
+                </li>
             </ul>
         </div>
 
