@@ -34,10 +34,6 @@ public class ArticleComment extends AuditingFields {
 
     @Setter @ManyToOne(optional = false) private Article article;    // 게시글 (id)
     @Setter @Column(nullable = false, length = 500) private String content;     // 본문
-    @CreatedDate private LocalDateTime createdAt;    //  생성시간
-    @CreatedBy private String createdBy;           // 생성자
-    @LastModifiedDate private LocalDateTime modifiedAt;   // 수정시간
-    @LastModifiedBy private String modifiedBy;          // 수정자
 
     protected ArticleComment() {
     }
