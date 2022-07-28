@@ -3,6 +3,7 @@ package com.fastcampus.fastcampusprojectboard.controller;
 import com.fastcampus.fastcampusprojectboard.config.SecurityConfig;
 import com.fastcampus.fastcampusprojectboard.domain.Article;
 import com.fastcampus.fastcampusprojectboard.domain.UserAccount;
+import com.fastcampus.fastcampusprojectboard.domain.type.SearchType;
 import com.fastcampus.fastcampusprojectboard.dto.ArticleDto;
 import com.fastcampus.fastcampusprojectboard.dto.ArticleWithCommentsDto;
 import com.fastcampus.fastcampusprojectboard.dto.UserAccountDto;
@@ -133,11 +134,41 @@ class ArticleControllerTest {
         mvc.perform(get("/articles/search"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.TEXT_HTML))
-                .andExpect(model().attributeExists("articles/search"));
+                .andExpect(view().name("articles/search"));
 
 
         //Then
     }
+    @DisplayName("[view][GET] 게시글 리스트 (게시판) 페이지 - 검색어와 함께 정상호출")
+    @Test
+    void givenSearchKeyword_whenRequestSearchingArticleView_thenReturnsArticlesSearchView() throws Exception {
+        //Given
+        SearchType searchType = SearchType.TITLE;
+        String searchValue = "title";
+        given(articleService.searchArticles(eq(searchType),eq(searchValue), any(Pageable.class))).willReturn(Page.empty());
+
+        //When
+        mvc.perform(get("/articles")
+                        .queryParam("searchType", searchType.name())
+                        .queryParam("searchValue", searchValue)
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                .andExpect(view().name("articles/index"))
+                .andExpect(model().attributeExists("articles"))
+                .andExpect(model().attributeExists("paginationBarNumbers"))
+                .andExpect(model().attributeExists("searchTypes"));
+        //Then
+        then(articleService).should().searchArticles(eq(searchType),eq(searchValue), any(Pageable.class));
+
+
+    }
+
+
+
+
+
+
     @Disabled("구현 중")
 
     @DisplayName("[view][GET] 해시태그 검색 페이지 - 정상호출")
