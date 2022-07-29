@@ -1,10 +1,13 @@
 package com.fastcampus.fastcampusprojectboard.controller;
 
 import com.fastcampus.fastcampusprojectboard.config.SecurityConfig;
+import com.fastcampus.fastcampusprojectboard.service.ArticleService;
+import com.fastcampus.fastcampusprojectboard.service.PagenationService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,6 +23,10 @@ public class AuthControllerTest {
 
     private final MockMvc mvc;
     //@Autowired 필수적으로 써줘야 테스트에서는 동작한다.
+    @MockBean
+    PagenationService pagenationService;
+    @MockBean
+    ArticleService articleService;
 
     AuthControllerTest(@Autowired MockMvc mvc) {
         this.mvc = mvc;

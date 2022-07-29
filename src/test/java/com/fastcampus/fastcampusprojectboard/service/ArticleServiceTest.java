@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -62,6 +63,46 @@ class ArticleServiceTest {
         // Then
         assertThat(articles).isEmpty();
         then(articleRepository).should().findByTitleContaining(searchKeyword, pageable);
+    }
+    @DisplayName("해시태그를 검색하면 빈 페이지를 반환한다.")
+    @Test
+    void givenSearchHashtag_whenSearchingHashtag_thenReturnsEmptyPage() {
+        // Given
+        Pageable pageable = Pageable.ofSize(20);
+
+        // When
+        Page<ArticleDto> articles = sut.searchArticleViaHashtag(null, pageable);
+
+        // Then
+        assertThat(articles).isEqualTo(Page.empty(pageable));
+    }
+    @DisplayName("해시태그를 검색하면 게시글 페이지를 반환한다.")
+    @Test
+    void givenSearchHashtag_whenSearchingArticles_thenReturnsArticlePages() {
+        // Given
+        Pageable pageable = Pageable.ofSize(20);
+
+        // When
+        Page<ArticleDto> articles = sut.searchArticleViaHashtag(null, pageable);
+
+        // Then
+        assertThat(articles).isEqualTo(Page.empty(pageable));
+        then(articleRepository).shouldHaveNoInteractions();
+    }
+    @DisplayName("해시태그를 조회하면 해시태그 리스트를 반환한다.")
+    @Test
+    void givenSearchHashtag_whenSearchingHashtagList_thenReturnsHashTagList() {
+        // Given
+        List<String> expectHashtagList = List.of("#java", "#spring", "#boot");
+        given(articleRepository.findAllDistinctHashtags()).willReturn(expectHashtagList);
+        // When
+        List<String> actualHashtags = sut.getHashtag();
+
+        // Then
+        assertThat(actualHashtags).isEqualTo(expectHashtagList);
+        then(articleRepository).should().findAllDistinctHashtags();
+
+
     }
 
     @DisplayName("게시글을 조회하면, 게시글을 반환한다.")
