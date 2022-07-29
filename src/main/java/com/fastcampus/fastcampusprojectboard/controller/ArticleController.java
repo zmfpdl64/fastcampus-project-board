@@ -1,6 +1,7 @@
 package com.fastcampus.fastcampusprojectboard.controller;
 
 import com.fastcampus.fastcampusprojectboard.domain.type.SearchType;
+import com.fastcampus.fastcampusprojectboard.dto.ArticleDto;
 import com.fastcampus.fastcampusprojectboard.dto.response.ArticleResponse;
 import com.fastcampus.fastcampusprojectboard.dto.response.ArticleWithCommentsResponse;
 import com.fastcampus.fastcampusprojectboard.service.ArticleService;
@@ -34,12 +35,13 @@ public class ArticleController {
                            ModelMap map) {
         Page<ArticleResponse> articles = articleService.searchArticles(searchType, searchValue, pageable).map(ArticleResponse::from);
         List<Integer> barNumbers = pagenationService.getPaginationBarNumbers(pageable.getPageNumber(), articles.getTotalPages());
-        map.addAttribute("articles",articles);
+        map.addAttribute("articles", articles);
         map.addAttribute("paginationBarNumbers", barNumbers);
         map.addAttribute("searchTypes", SearchType.values());
 
         return "articles/index";
     }
+
     @GetMapping("/{articleId}")
     public String article_detail(ModelMap map, @PathVariable(name = "articleId") Long articleId) {
         ArticleWithCommentsResponse article = ArticleWithCommentsResponse.from(articleService.getArticle(articleId));
@@ -48,6 +50,24 @@ public class ArticleController {
         return "articles/detail";
     }
 
+    @GetMapping("/search-hashtag")
+    public String searchhashtag(
+            @RequestParam(required = false) String searchValue,
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            ModelMap map
+    ) {
+
+        Page<ArticleResponse> articles = articleService.searchArticleViaHashtag(searchValue, pageable).map(ArticleResponse::from);
+        List<Integer> barNumbers = pagenationService.getPaginationBarNumbers(pageable.getPageNumber(), articles.getTotalPages());
+        List<String> hashtags = articleService.getHashtag();
+
+        map.addAttribute("articles", articles);
+        map.addAttribute("hashtags", hashtags);
+        map.addAttribute("paginationBarNumbers", barNumbers);
+        map.addAttribute("searchType", SearchType.HASHTAG);
 
 
+        return "articles/search-hashtag";
+
+    }
 }

@@ -169,19 +169,56 @@ class ArticleControllerTest {
 
 
 
-    @Disabled("구현 중")
 
     @DisplayName("[view][GET] 해시태그 검색 페이지 - 정상호출")
     @Test
-    void givenNothing_whenRequestArticleHashtagSearchView_thenReturnsArticlesHashtagSearchView() throws Exception {
+    void givenNothing_whenRequestArticleSearchHashtagView_thenReturnsArticlesHashtagSearchView() throws Exception {
         //Given
+        List<String> hashtags = List.of("#java", "#spring", "#boot");
+        given(articleService.searchArticleViaHashtag(eq(null), any(Pageable.class))).willReturn(Page.empty());
+        given(articleService.getHashtag()).willReturn(hashtags);
+        given(pagenationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(0,1,2,3,4));
+
 
         //When
         mvc.perform(get("/articles/search-hashtag"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.TEXT_HTML))
-                .andExpect(model().attributeExists("articles/search-hashtag"));
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                .andExpect(view().name("articles/search-hashtag"))
+                .andExpect(model().attribute("articles", Page.empty()))
+                .andExpect(model().attribute("hashtags", hashtags))
+                .andExpect(model().attributeExists("paginationBarNumbers"));
         //Then
+        then(articleService).should().searchArticleViaHashtag(eq(null), any(Pageable.class));
+        then(pagenationService).should().getPaginationBarNumbers(anyInt(), anyInt());
+        then(articleService).should().getHashtag();
+    }
+
+    @DisplayName("[view][GET] 해시태그 검색 페이지 - 정상호출, 해시태그 입력")
+    @Test
+    void givenHashtag_whenRequestArticleSearchHashtagView_thenReturnsArticlesHashtagSearchView() throws Exception {
+        //Given
+        String hashtag = "#java";
+        List<String> hashtags = List.of("#java", "#spring", "#boot");
+        given(articleService.searchArticleViaHashtag(eq(hashtag), any(Pageable.class))).willReturn(Page.empty());
+        given(articleService.getHashtag()).willReturn(hashtags);
+        given(pagenationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(0,1,2,3,4));
+
+        //When
+        mvc.perform(get("/articles/search-hashtag")
+                        .queryParam("searchValue", hashtag)
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+//                .andExpect(view().name("articles/search-hashtag"))
+                .andExpect(model().attribute("articles", Page.empty()))
+                .andExpect(model().attribute("hashtags", hashtags))
+                .andExpect(model().attributeExists("searchType"))
+                .andExpect(model().attributeExists("paginationBarNumbers"));
+        //Then
+        then(articleService).should().searchArticleViaHashtag(eq(hashtag), any(Pageable.class));
+        then(articleService).should().getHashtag();
+        then(pagenationService).should().getPaginationBarNumbers(anyInt(), anyInt());
     }
 
 
