@@ -27,10 +27,4 @@ class FastcampusProjectBoardApplicationTests {
 	}
 
 
-	@Test
-	@Transactional
-	void contextLoads() {
-
-	}
-
 }
