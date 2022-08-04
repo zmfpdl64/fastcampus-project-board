@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -27,13 +28,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 
 @DisplayName("비즈니스 로직 - 게시글")
+//@DataJpaTest
 @ExtendWith(MockitoExtension.class)
 class ArticleServiceTest {
     @InjectMocks private ArticleService sut;
 
     @Mock private ArticleRepository articleRepository;
 
-    @DisplayName("검색어 없이 게시글을 검색하면, 게시글 페이지를 반환한다.")
+    @DisplayName("검색어 없이 게시글을 검색하면, 게시글 페이지를 반환한다.  OK")
     @Test
     void givenNoSearchParameters_whenSearchingArticles_thenReturnsArticlePage() {
         // Given
@@ -48,7 +50,7 @@ class ArticleServiceTest {
         then(articleRepository).should().findAll(pageable);
     }
 
-    @DisplayName("검색어와 함께 게시글을 검색하면, 게시글 페이지를 반환한다.")
+    @DisplayName("검색어와 함께 게시글을 검색하면, 게시글 페이지를 반환한다. OK")
     @Test
     void givenSearchParameters_whenSearchingArticles_thenReturnsArticlePage() {
         // Given
@@ -57,6 +59,7 @@ class ArticleServiceTest {
         Pageable pageable = Pageable.ofSize(20);
         given(articleRepository.findByTitleContaining(searchKeyword, pageable)).willReturn(Page.empty());
 
+
         // When
         Page<ArticleDto> articles = sut.searchArticles(searchType, searchKeyword, pageable);
 
@@ -64,7 +67,7 @@ class ArticleServiceTest {
         assertThat(articles).isEmpty();
         then(articleRepository).should().findByTitleContaining(searchKeyword, pageable);
     }
-    @DisplayName("해시태그를 검색하면 빈 페이지를 반환한다.")
+    @DisplayName("해시태그를 검색하면 빈 페이지를 반환한다. OK")
     @Test
     void givenSearchHashtag_whenSearchingHashtag_thenReturnsEmptyPage() {
         // Given
@@ -76,7 +79,7 @@ class ArticleServiceTest {
         // Then
         assertThat(articles).isEqualTo(Page.empty(pageable));
     }
-    @DisplayName("해시태그를 검색하면 게시글 페이지를 반환한다.")
+    @DisplayName("해시태그를 검색하면 게시글 페이지를 반환한다. OK")
     @Test
     void givenSearchHashtag_whenSearchingArticles_thenReturnsArticlePages() {
         // Given
@@ -89,7 +92,7 @@ class ArticleServiceTest {
         assertThat(articles).isEqualTo(Page.empty(pageable));
         then(articleRepository).shouldHaveNoInteractions();
     }
-    @DisplayName("해시태그를 조회하면 해시태그 리스트를 반환한다.")
+    @DisplayName("해시태그를 조회하면 해시태그 리스트를 반환한다. NOT UNDERSTAND")
     @Test
     void givenSearchHashtag_whenSearchingHashtagList_thenReturnsHashTagList() {
         // Given
@@ -97,6 +100,7 @@ class ArticleServiceTest {
         given(articleRepository.findAllDistinctHashtags()).willReturn(expectHashtagList);
         // When
         List<String> actualHashtags = sut.getHashtag();
+
 
         // Then
         assertThat(actualHashtags).isEqualTo(expectHashtagList);
@@ -244,7 +248,6 @@ class ArticleServiceTest {
                 "uno",
                 LocalDateTime.now(),
                 "uno",
-                1L,
                 "Uno",
                 "password",
                 "uno@mail.com",

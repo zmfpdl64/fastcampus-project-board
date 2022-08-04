@@ -9,7 +9,6 @@ public record UserAccountDto(
         String createdBy,
         LocalDateTime modifiedAt,
         String modifiedBy,
-        Long id,
         String userId,
         String userPassword,
         String email,
@@ -17,8 +16,8 @@ public record UserAccountDto(
         String memo
 ) {
 
-    public static UserAccountDto of(LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy, Long id, String userId, String userPassword, String email, String nickname, String memo) {
-        return new UserAccountDto(createdAt, createdBy, modifiedAt, modifiedBy, id, userId, userPassword, email, nickname, memo);
+    public static UserAccountDto of(LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy, String userId, String userPassword, String email, String nickname, String memo) {
+        return new UserAccountDto(createdAt, createdBy, modifiedAt, modifiedBy, userId, userPassword, email, nickname, memo);
     }
 
     public static UserAccountDto from(UserAccount entity) {
@@ -27,7 +26,6 @@ public record UserAccountDto(
                 entity.getCreatedBy(),
                 entity.getModifiedAt(),
                 entity.getModifiedBy(),
-                entity.getId(),
                 entity.getUserId(),
                 entity.getUserPassword(),
                 entity.getEmail(),
