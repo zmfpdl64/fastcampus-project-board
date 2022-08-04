@@ -279,7 +279,6 @@ class ArticleControllerTest {
                 "uno",
                 LocalDateTime.now(),
                 "uno",
-                1L,
                 "Uno",
                 "password",
                 "uno@mail.com",
