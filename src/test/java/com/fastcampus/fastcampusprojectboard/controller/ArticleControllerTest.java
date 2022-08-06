@@ -3,12 +3,13 @@ package com.fastcampus.fastcampusprojectboard.controller;
 import com.fastcampus.fastcampusprojectboard.config.SecurityConfig;
 import com.fastcampus.fastcampusprojectboard.domain.Article;
 import com.fastcampus.fastcampusprojectboard.domain.UserAccount;
-import com.fastcampus.fastcampusprojectboard.domain.type.SearchType;
+import com.fastcampus.fastcampusprojectboard.domain.contant.SearchType;
 import com.fastcampus.fastcampusprojectboard.dto.ArticleDto;
 import com.fastcampus.fastcampusprojectboard.dto.ArticleWithCommentsDto;
 import com.fastcampus.fastcampusprojectboard.dto.UserAccountDto;
 import com.fastcampus.fastcampusprojectboard.service.ArticleService;
 import com.fastcampus.fastcampusprojectboard.service.PagenationService;
+import com.fastcampus.fastcampusprojectboard.util.FormDataEncoder;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,18 +35,24 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DisplayName("View 컨트롤러 - 게시글")
-@Import(SecurityConfig.class)
+@Import({SecurityConfig.class, FormDataEncoder.class})
 @WebMvcTest(ArticleController.class)
 class ArticleControllerTest {
 
     private final MockMvc mvc;
     //@Autowired 필수적으로 써줘야 테스트에서는 동작한다.
+    private final FormDataEncoder formDataEncoder;
 
     @MockBean private ArticleService articleService;
     @MockBean private PagenationService pagenationService;
 
-    ArticleControllerTest(@Autowired MockMvc mvc) {
+    ArticleControllerTest(
+            @Autowired MockMvc mvc,
+            @Autowired FormDataEncoder formDataEncoder
+    ) {
         this.mvc = mvc;
+        this.formDataEncoder = formDataEncoder;
+
     }
 
     @DisplayName("[view][GET] 게시글 리스트 (게시판) 페이지 - 정상호출")
@@ -110,7 +117,7 @@ class ArticleControllerTest {
     void givenNothing_whenRequestArticle_thenReturnsArticleView() throws Exception {
         //Given
         Long id = 1L;
-        given(articleService.getArticle(id)).willReturn(createArticleWithCommentsDto());
+        given(articleService.getArticleWithComments(id)).willReturn(createArticleWithCommentsDto());
 
         //When
         mvc.perform(get("/articles/"+id))
