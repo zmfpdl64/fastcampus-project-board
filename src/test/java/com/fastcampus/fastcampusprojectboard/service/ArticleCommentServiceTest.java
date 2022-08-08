@@ -35,6 +35,7 @@ class ArticleCommentServiceTest {
     @InjectMocks private ArticleCommentService sut;
     @Mock private ArticleRepository articleRepository;
     @Mock private ArticleCommentRepository articleCommentRepository;
+    @Mock private UserAccountRepository userAccountRepository;
     @DisplayName("게시글 ID로 조회하면, 해당하는 댓글 리스트를 반환한다.")
     @Test
     void givenArticleId_whenSearchingArticleComments_thenReturnsArticleComments() {
@@ -60,6 +61,7 @@ class ArticleCommentServiceTest {
         ArticleCommentDto dto = createArticleCommentDto("댓글");
         given(articleRepository.getReferenceById(dto.articleId())).willReturn(createArticle());
         given(articleCommentRepository.save(any(ArticleComment.class))).willReturn(null);
+        given(userAccountRepository.getReferenceById(dto.userAccountDto().userId())).willReturn(createUserAccount());
 
         // When
         sut.saveArticleComment(dto);
@@ -67,11 +69,12 @@ class ArticleCommentServiceTest {
         // Then
         then(articleRepository).should().getReferenceById(dto.articleId());
         then(articleCommentRepository).should().save(any(ArticleComment.class));
+        then(userAccountRepository).should().getReferenceById(dto.userAccountDto().userId());
     }
 
     @DisplayName("댓글 저장을 시도했는데 맞는 게시글이 없으면, 경고 로그를 찍고 아무것도 안 한다.")
     @Test
-    void givenNonexistentArticle_whenSavingArticleComment_thenLogsSituationAndDoesNothing() {
+    void givenNonexistentArticle_whenSavingArticleComment_thenLogsSituationAndDoesNothing() throws Exception {
         // Given
         ArticleCommentDto dto = createArticleCommentDto("댓글");
         given(articleRepository.getReferenceById(dto.articleId())).willThrow(EntityNotFoundException.class);
@@ -81,7 +84,9 @@ class ArticleCommentServiceTest {
 
         // Then
         then(articleRepository).should().getReferenceById(dto.articleId());
+        then(userAccountRepository).shouldHaveNoInteractions();
         then(articleCommentRepository).shouldHaveNoInteractions();
+        //아무 일 하지 않았다.
     }
 
     @DisplayName("댓글 정보를 입력하면, 댓글을 수정한다.")
@@ -99,8 +104,8 @@ class ArticleCommentServiceTest {
 
         // Then
         assertThat(articleComment.getContent())
-                .isNotEqualTo(oldContent)
-                .isEqualTo(updatedContent);
+                .isEqualTo(updatedContent)
+                .isNotEqualTo(oldContent);
         then(articleCommentRepository).should().getReferenceById(dto.id());
     }
 
@@ -136,27 +141,19 @@ class ArticleCommentServiceTest {
     private ArticleCommentDto createArticleCommentDto(String content) {
         return ArticleCommentDto.of(
                 1L,
-                    1L,
-                    createUserAccountDto(),
-                    LocalDateTime.now(),
-                    "uno",
-                    LocalDateTime.now(),
-                    "uno",
-                    content
-        );
+                createUserAccountDto(),
+                content
+                );
     }
 
     private UserAccountDto createUserAccountDto() {
         return UserAccountDto.of(
-                LocalDateTime.now(),
-                "uno",
-                LocalDateTime.now(),
-                "uno@mail.com",
                 "uno",
                 "password",
                 "uno@mail.com",
                 "nickname",
                 "memo"
+
         );
     }
 
