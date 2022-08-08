@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("View 컨트롤러 - 게시글")
 @Import(SecurityConfig.class)
-@WebMvcTest
+@WebMvcTest(MainController.class)
 public class AuthControllerTest {
 
     private final MockMvc mvc;
