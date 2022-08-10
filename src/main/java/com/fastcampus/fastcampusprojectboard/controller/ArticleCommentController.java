@@ -4,11 +4,14 @@ import com.fastcampus.fastcampusprojectboard.dto.UserAccountDto;
 import com.fastcampus.fastcampusprojectboard.dto.request.ArticleCommentRequest;
 import com.fastcampus.fastcampusprojectboard.service.ArticleCommentService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/comments")
 @Controller
@@ -28,9 +31,9 @@ public class ArticleCommentController {
     }
 
     @PostMapping("/{commentId}/delete")
-    public String postDeleteArticleCOmment(@PathVariable Long commentId, Long articleId) {
+    public String postDeleteArticleCOmment(@PathVariable Long commentId,@RequestParam Long articleId) {
         articleCommentService.deleteArticleComment(commentId);
-
+        log.info("articleId - {} : commentId - {}", articleId, commentId);
         return "redirect:/articles/" + articleId;
     }
 }

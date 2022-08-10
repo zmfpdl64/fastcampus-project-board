@@ -2,20 +2,32 @@
 <thlogic>
     <attr sel="#header" th:replace="header :: #header"/>
     <attr sel="#footer" th:replace="footer :: #footer"/>
+
+    <attr sel=".article-id" th:name="articleId" th:value="${article.id}"/>
+
+
     <attr sel="main" th:object="${article}">
         <attr sel="h1" th:text="*{title}"/>
         <attr sel="span.nick-name" th:text="*{nickname}"/>
         <attr sel="a.email" th:text="*{email}" href="mailto:test@mail.com"/>
         <attr sel="time" th:text="*{#temporals.format(createdAt, 'yyyy-MM-dd')}"/>
         <attr sel="a.hashtag" th:text="*{hashtag}"/>
+
+        <attr sel="#comment-form" th:action="@{/comments/new}" th:method="post">
+            <attr sel="#comment-textbox" th:name="content" />
+        </attr>
     </attr>
-    <attr sel="commentul" th:each="comment : ${articleComments}">
-        <attr sel="li" th:object="${comment}">
-            <attr sel="strong" th:text="*{nickname}"/>
-            <attr sel="small" th:datetime="*{createdAt}" th:text="*{#temporals.format(createdAt, 'yyyy-MM-dd HH:mm:ss')}"/>
-            <attr sel="div.p" th:text="*{content}"/>
 
 
+    <attr sel="#article-comments" th:remove="all-but-first" th:each="comment : ${articleComments}">
+
+        <attr sel="li[0]" th:object="${comment}">
+
+            <attr sel="form" th:action="'/comments/' + *{id} + '/delete'" th:method="post">
+                <attr sel="div/strong" th:text="*{nickname}" />
+                <attr sel="div/small/time" th:datetime="*{createdAt}" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}" />
+                <attr sel="div/p" th:text="*{content}" />
+            </attr>
         </attr>
     </attr>
 </thlogic>
