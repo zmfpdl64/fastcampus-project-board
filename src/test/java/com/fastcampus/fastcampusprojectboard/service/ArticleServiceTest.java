@@ -136,7 +136,6 @@ class ArticleServiceTest {
         // Given
         Long articleId = 0L;
         ArticleDto dto = createArticleDto();
-        given(userAccountRepository.getReferenceById(dto.userAccountDto().userId())).willReturn(createUserAccount());
         given(articleRepository.findById(articleId)).willReturn(Optional.empty());
 
         // When
@@ -146,7 +145,6 @@ class ArticleServiceTest {
         assertThat(t)
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("게시글이 없습니다 - articleId: " + articleId);
-        then(userAccountRepository).should().getReferenceById(dto.userAccountDto().userId());
         then(articleRepository).should().findById(articleId);
     }
 

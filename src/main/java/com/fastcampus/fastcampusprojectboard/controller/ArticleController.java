@@ -4,11 +4,13 @@ import com.fastcampus.fastcampusprojectboard.domain.contant.FormStatus;
 import com.fastcampus.fastcampusprojectboard.domain.contant.SearchType;
 import com.fastcampus.fastcampusprojectboard.dto.UserAccountDto;
 import com.fastcampus.fastcampusprojectboard.dto.request.ArticleRequest;
+import com.fastcampus.fastcampusprojectboard.dto.response.ArticleCommentResponse;
 import com.fastcampus.fastcampusprojectboard.dto.response.ArticleResponse;
 import com.fastcampus.fastcampusprojectboard.dto.response.ArticleWithCommentsResponse;
 import com.fastcampus.fastcampusprojectboard.service.ArticleService;
 import com.fastcampus.fastcampusprojectboard.service.PagenationService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/articles")
 @Controller
@@ -46,6 +49,10 @@ public class ArticleController {
         ArticleWithCommentsResponse article = ArticleWithCommentsResponse.from(articleService.getArticleWithComments(articleId));
         map.addAttribute("article", article);
         map.addAttribute("articleComments", article.articleCommentResponse());
+        log.info("articleId - {} ", article.id());
+        for(ArticleCommentResponse comment : article.articleCommentResponse()) {
+            log.info("CommentId - {}", comment.id());
+        }
         return "articles/detail";
     }
 
