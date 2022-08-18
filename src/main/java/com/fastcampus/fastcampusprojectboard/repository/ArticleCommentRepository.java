@@ -19,6 +19,7 @@ public interface ArticleCommentRepository extends
         QuerydslBinderCustomizer<QArticleComment>
 {
     List<ArticleComment> findByArticle_Id(Long articleId);  //Data Jpa 기술인거 같다.
+    void deleteByIdAndUserAccount_UserId(Long articleId, String userId);
     @Override
     default void customize(QuerydslBindings bindings, QArticleComment root) {
         bindings.excludeUnlistedProperties(true);  //선택적인 필드만 검색했으면 좋겠다.

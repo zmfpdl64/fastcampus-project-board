@@ -20,6 +20,7 @@ public interface ArticleRepository extends
         QuerydslPredicateExecutor<Article>,
         QuerydslBinderCustomizer<QArticle>
 {
+    void deleteByIdAndUserAccount_UserId(Long articleId, String userId);
     Page<Article> findByTitleContaining(String title, Pageable pageable);
     Page<Article> findByContentContaining(String content, Pageable pageable);
     Page<Article> findByHashtag(String hashtag, Pageable pageable);
