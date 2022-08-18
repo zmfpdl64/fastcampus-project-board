@@ -16,6 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import org.mockito.Mock;
@@ -89,6 +91,7 @@ class ArticleCommentServiceTest {
         //아무 일 하지 않았다.
     }
 
+    @WithUserDetails(value="unoTest", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @DisplayName("댓글 정보를 입력하면, 댓글을 수정한다.")
     @Test
     void givenArticleCommentInfo_whenUpdatingArticleComment_thenUpdatesArticleComment() {
@@ -97,16 +100,18 @@ class ArticleCommentServiceTest {
         String updatedContent = "댓글";
         ArticleComment articleComment = createArticleComment(oldContent);
         ArticleCommentDto dto = createArticleCommentDto(updatedContent);
-        given(articleCommentRepository.getReferenceById(dto.id())).willReturn(articleComment);
+        given(articleCommentRepository.getReferenceById(articleComment.getId())).willReturn(articleComment);
+        given(userAccountRepository.getReferenceById(articleComment.getUserAccount().getUserId())).willReturn(articleComment.getUserAccount());
 
         // When
-        sut.updateArticleComment(dto);
+        sut.updateArticleComment(articleComment.getId(), dto);
 
         // Then
         assertThat(articleComment.getContent())
                 .isEqualTo(updatedContent)
                 .isNotEqualTo(oldContent);
-        then(articleCommentRepository).should().getReferenceById(dto.id());
+        then(articleCommentRepository).should().getReferenceById(articleComment.getId());
+        then(userAccountRepository).should().getReferenceById(articleComment.getUserAccount().getUserId());
     }
 
     @DisplayName("없는 댓글 정보를 수정하려고 하면, 경고 로그를 찍고 아무 것도 안 한다.")
@@ -117,7 +122,7 @@ class ArticleCommentServiceTest {
         given(articleCommentRepository.getReferenceById(dto.id())).willThrow(EntityNotFoundException.class);
 
         // When
-        sut.updateArticleComment(dto);
+        sut.updateArticleComment(dto.id(), dto);
 
         // Then
         then(articleCommentRepository).should().getReferenceById(dto.id());
@@ -128,13 +133,14 @@ class ArticleCommentServiceTest {
     void givenArticleCommentId_whenDeletingArticleComment_thenDeletesArticleComment() {
         // Given
         Long articleCommentId = 1L;
-        willDoNothing().given(articleCommentRepository).deleteById(articleCommentId);
+        UserAccount userAccount = createUserAccount();
+        willDoNothing().given(articleCommentRepository).deleteByIdAndUserAccount_UserId(articleCommentId,userAccount.getUserId());
 
         // When
-        sut.deleteArticleComment(articleCommentId);
+        sut.deleteArticleComment(articleCommentId, userAccount.getUserId());
 
         // Then
-        then(articleCommentRepository).should().deleteById(articleCommentId);
+        then(articleCommentRepository).should().deleteByIdAndUserAccount_UserId(articleCommentId, userAccount.getUserId());
     }
 
 

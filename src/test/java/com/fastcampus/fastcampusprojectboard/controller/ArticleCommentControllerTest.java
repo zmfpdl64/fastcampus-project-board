@@ -1,7 +1,13 @@
 package com.fastcampus.fastcampusprojectboard.controller;
 
 import com.fastcampus.fastcampusprojectboard.config.SecurityConfig;
+import com.fastcampus.fastcampusprojectboard.config.TestSecurityConfig;
+import com.fastcampus.fastcampusprojectboard.domain.Article;
+import com.fastcampus.fastcampusprojectboard.domain.UserAccount;
 import com.fastcampus.fastcampusprojectboard.dto.ArticleCommentDto;
+import com.fastcampus.fastcampusprojectboard.dto.ArticleDto;
+import com.fastcampus.fastcampusprojectboard.dto.ArticleWithCommentsDto;
+import com.fastcampus.fastcampusprojectboard.dto.UserAccountDto;
 import com.fastcampus.fastcampusprojectboard.dto.request.ArticleCommentRequest;
 import com.fastcampus.fastcampusprojectboard.service.ArticleCommentService;
 import com.fastcampus.fastcampusprojectboard.util.FormDataEncoder;
@@ -13,9 +19,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -25,9 +35,9 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@DisplayName("View 컨트롤러 - 게시글")
-@Import({SecurityConfig.class, FormDataEncoder.class})
-@WebMvcTest(ArticleCommentController.class)
+@DisplayName("View 컨트롤러 - 댓글")
+@Import({TestSecurityConfig.class, FormDataEncoder.class})
+@WebMvcTest({ArticleCommentController.class})
 class ArticleCommentControllerTest {
 
     private final MockMvc mvc;
@@ -46,6 +56,7 @@ class ArticleCommentControllerTest {
 
     }
 
+    @WithUserDetails(value="unoTest", setupBefore= TestExecutionEvent.TEST_EXECUTION)
     @DisplayName("Comment New")
     @Test
     void givenArticleComment_whenSaveArticleComment_thenReturnSaveComment() throws Exception {
@@ -71,17 +82,20 @@ class ArticleCommentControllerTest {
 
     }
 
+    @WithUserDetails(value="unoTest", setupBefore= TestExecutionEvent.TEST_EXECUTION)
     @DisplayName("Comment Delete")
     @Test
     void givenArticleId_whenDeleteArticleComment_thenReturnDeleteComment() throws Exception {
 
         //Given
+        long commentId = 1L;
         long articleId = 1L;
-        willDoNothing().given(articleCommentService).deleteArticleComment(articleId);
+        String userId = "unoTest";
+        willDoNothing().given(articleCommentService).deleteArticleComment(commentId, userId);
 
         //When
         mvc.perform(
-                        post("/comments/"+articleId+"/delete")
+                        post("/comments/"+commentId+"/delete")
                                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                                 .content(formDataEncoder.encode(Map.of("articleId", articleId)))
                                 .with(csrf())
@@ -91,9 +105,72 @@ class ArticleCommentControllerTest {
                 .andExpect(redirectedUrl("/articles/"+articleId));
 
         //Then
-        then(articleCommentService).should().deleteArticleComment(articleId);
+        then(articleCommentService).should().deleteArticleComment(commentId, userId);
 
     }
 
+    private ArticleWithCommentsDto createArticleWithCommentsDto() {
+        return ArticleWithCommentsDto.of(
+                LocalDateTime.now(),
+                "uno",
+                LocalDateTime.now(),
+                "uno",
+                1L,
+                createUserAccountDto(),
+                Set.of(),
+                "title",
+                "content",
+                "hashtag"
+        );
 
+    }
+
+    private UserAccount createUserAccount() {
+        return UserAccount.of(
+                "uno",
+                "password",
+                "uno@email.com",
+                "Uno",
+                null
+        );
+    }
+
+    private Article createArticle() {
+        return Article.of(
+                createUserAccount(),
+                "title",
+                "content",
+                "#java"
+        );
+    }
+
+    private ArticleDto createArticleDto() {
+        return createArticleDto("title", "content", "#java");
+    }
+
+    private ArticleDto createArticleDto(String title, String content, String hashtag) {
+        return ArticleDto.of(1L,
+                createUserAccountDto(),
+                title,
+                content,
+                hashtag,
+                LocalDateTime.now(),
+                "Uno",
+                LocalDateTime.now(),
+                "Uno");
+    }
+
+    private UserAccountDto createUserAccountDto() {
+        return UserAccountDto.of(
+                LocalDateTime.now(),
+                "uno",
+                LocalDateTime.now(),
+                "uno",
+                "Uno",
+                "password",
+                "uno@mail.com",
+                "nickname",
+                null
+        );
+    }
 }
