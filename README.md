@@ -31,4 +31,4 @@ Spring Boot
  
 ## 데모 페이지
 
- * https://practice.board.herokuapp.com/
+ * https://practice-board.herokuapp.com/
