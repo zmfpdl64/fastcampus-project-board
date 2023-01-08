@@ -1,21 +1,17 @@
 package com.fastcampus.fastcampusprojectboard.domain;
 
-import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 
 import javax.persistence.*;
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @ToString(callSuper = true)
 @Table(indexes = {
         @Index( columnList = "title") ,
-        @Index( columnList = "hashtag") ,
         @Index( columnList = "createdAt") ,
         @Index( columnList = "createdBy") ,
 
@@ -27,7 +23,7 @@ public class Article extends AuditingFields {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Setter @ManyToOne(optional = false)
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private UserAccount userAccount;
     @Setter
     @Column(nullable = false)
@@ -36,7 +32,14 @@ public class Article extends AuditingFields {
     @Column(nullable = false, length = 10000)
     private String content; //본문
 
-    @Setter private String hashtag; //해시태그
+    @ToString.Exclude
+    @JoinTable(
+            name = "article_hashtag",
+            joinColumns = @JoinColumn(name = "article_id"),
+            inverseJoinColumns = @JoinColumn(name = "hashtag_id")
+    )
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}) //생성, 업데이트 가능
+    private Set<Hashtag> hashtags = new LinkedHashSet<>();
 
     @OrderBy("createdAt desc")
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
@@ -48,14 +51,13 @@ public class Article extends AuditingFields {
     protected Article() {
     }
 
-    private Article(UserAccount userAccount ,String title, String content, String hashtag) {
+    private Article(UserAccount userAccount ,String title, String content) {
         this.userAccount = userAccount;
         this.title = title;
         this.content = content;
-        this.hashtag = hashtag;
     }
-    public static Article of (UserAccount userAccount ,String title, String content, String hashtag) {
-        return new Article(userAccount, title, content, hashtag);
+    public static Article of (UserAccount userAccount ,String title, String content) {
+        return new Article(userAccount, title, content);
     }
 
     @Override   //지금 막 만든 영속화 되지 않은 entity는 모두 동등성 검사는 탈락한다.
@@ -69,4 +71,17 @@ public class Article extends AuditingFields {
     public int hashCode() {
         return Objects.hash(this.getId());
     }
+
+    public void addHashtag(Hashtag hashtag) {
+        this.getHashtags().add(hashtag);
+    }
+
+    public void addHashtags(Collection<Hashtag> hashtags){
+        this.getHashtags().addAll(hashtags);
+    }
+
+    public void clearHashtags() {
+        this.getHashtags().clear();
+    }
+
 }
