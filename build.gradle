@@ -51,6 +51,7 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 	//마이sql db
 	runtimeOnly 'mysql:mysql-connector-java'
+	runtimeOnly 'org.postgresql:postgresql'
 	//사용자 지정 yaml 설정
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
