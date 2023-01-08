@@ -11,7 +11,7 @@
         <attr sel="span.nick-name" th:text="*{nickname}"/>
         <attr sel="a.email" th:text="*{email}" href="mailto:test@mail.com"/>
         <attr sel="time" th:text="*{#temporals.format(createdAt, 'yyyy-MM-dd')}"/>
-        <attr sel="#hashtag" th:each="hashtag : ${article.hashtag}">
+        <attr sel="#hashtag" th:each="hashtag : ${article.hashtags}">
             <attr sel="a"
                   th:text="'#' + ${hashtag}"
                   th:href="@{/articles(searchType=${searchTypeHashtag},searchValue=${hashtag})}"
