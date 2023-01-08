@@ -2,6 +2,7 @@ package com.fastcampus.fastcampusprojectboard.service;
 
 import com.fastcampus.fastcampusprojectboard.domain.Article;
 import com.fastcampus.fastcampusprojectboard.domain.ArticleComment;
+import com.fastcampus.fastcampusprojectboard.domain.Hashtag;
 import com.fastcampus.fastcampusprojectboard.domain.UserAccount;
 import com.fastcampus.fastcampusprojectboard.dto.ArticleCommentDto;
 import com.fastcampus.fastcampusprojectboard.dto.UserAccountDto;
@@ -26,6 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -104,7 +106,7 @@ class ArticleCommentServiceTest {
         given(userAccountRepository.getReferenceById(articleComment.getUserAccount().getUserId())).willReturn(articleComment.getUserAccount());
 
         // When
-        sut.updateArticleComment(articleComment.getId(), dto);
+        sut.updateArticleComment(dto);
 
         // Then
         assertThat(articleComment.getContent())
@@ -122,7 +124,7 @@ class ArticleCommentServiceTest {
         given(articleCommentRepository.getReferenceById(dto.id())).willThrow(EntityNotFoundException.class);
 
         // When
-        sut.updateArticleComment(dto.id(), dto);
+        sut.updateArticleComment(dto);
 
         // Then
         then(articleCommentRepository).should().getReferenceById(dto.id());
@@ -166,11 +168,10 @@ class ArticleCommentServiceTest {
     private ArticleComment createArticleComment(String content) {
         return ArticleComment.of(
                 createUserAccount(),
-                Article.of(createUserAccount(), "title", "content", "hashtag"),
+                createArticle(),
                 content
         );
     }
-
     private UserAccount createUserAccount() {
         return UserAccount.of(
                 "uno",
@@ -182,12 +183,18 @@ class ArticleCommentServiceTest {
     }
 
     private Article createArticle() {
-        return Article.of(
+        Article article = Article.of(
                 createUserAccount(),
                 "title",
-                "content",
-                "#java"
+                "content"
         );
+        article.addHashtags(Set.of(createHashtag(article)));
+
+        return article;
+    }
+
+    private Hashtag createHashtag(Article article) {
+        return Hashtag.of("java");
     }
 
 }

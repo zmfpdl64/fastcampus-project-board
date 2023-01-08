@@ -4,10 +4,7 @@ import com.fastcampus.fastcampusprojectboard.config.SecurityConfig;
 import com.fastcampus.fastcampusprojectboard.config.TestSecurityConfig;
 import com.fastcampus.fastcampusprojectboard.domain.Article;
 import com.fastcampus.fastcampusprojectboard.domain.UserAccount;
-import com.fastcampus.fastcampusprojectboard.dto.ArticleCommentDto;
-import com.fastcampus.fastcampusprojectboard.dto.ArticleDto;
-import com.fastcampus.fastcampusprojectboard.dto.ArticleWithCommentsDto;
-import com.fastcampus.fastcampusprojectboard.dto.UserAccountDto;
+import com.fastcampus.fastcampusprojectboard.dto.*;
 import com.fastcampus.fastcampusprojectboard.dto.request.ArticleCommentRequest;
 import com.fastcampus.fastcampusprojectboard.service.ArticleCommentService;
 import com.fastcampus.fastcampusprojectboard.util.FormDataEncoder;
@@ -120,7 +117,7 @@ class ArticleCommentControllerTest {
                 Set.of(),
                 "title",
                 "content",
-                "hashtag"
+                Set.of(HashtagDto.of("java"))
         );
 
     }
@@ -139,21 +136,20 @@ class ArticleCommentControllerTest {
         return Article.of(
                 createUserAccount(),
                 "title",
-                "content",
-                "#java"
+                "content"
         );
     }
 
     private ArticleDto createArticleDto() {
-        return createArticleDto("title", "content", "#java");
+        return createArticleDto("title", "content", Set.of(HashtagDto.of("java")));
     }
 
-    private ArticleDto createArticleDto(String title, String content, String hashtag) {
+    private ArticleDto createArticleDto(String title, String content, Set<HashtagDto> hashtagDtos) {
         return ArticleDto.of(1L,
                 createUserAccountDto(),
                 title,
                 content,
-                hashtag,
+                hashtagDtos,
                 LocalDateTime.now(),
                 "Uno",
                 LocalDateTime.now(),
