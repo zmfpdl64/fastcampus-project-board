@@ -94,14 +94,14 @@ class ArticleServiceTest {
         // Given
         String hashtagName = "난 없지롱";
         Pageable pageable = Pageable.ofSize(20);
-        given(articleRepository.findByHashtagNames(null, pageable)).willReturn(new PageImpl<>(List.of(), pageable, 0));
+        given(articleRepository.findByHashtagNames(List.of(hashtagName), pageable)).willReturn(new PageImpl<>(List.of(), pageable, 0));
 
         // When
         Page<ArticleDto> articles = sut.searchArticlesViaHashtag(hashtagName, pageable);
 
         // Then
         assertThat(articles).isEqualTo(Page.empty(pageable));
-        then(articleRepository).should().findByHashtagNames(null , pageable);
+        then(articleRepository).should().findByHashtagNames(List.of(hashtagName) , pageable);
     }
 
     @DisplayName("게시글을 해시태그 검색하면, 게시글 페이지를 반환한다.")
@@ -111,14 +111,14 @@ class ArticleServiceTest {
         String hashtagName = "java";
         Pageable pageable = Pageable.ofSize(20);
         Article expectedArticle = createArticle(1L);
-        given(articleRepository.findByHashtagNames(null , pageable)).willReturn(new PageImpl<>(List.of(expectedArticle), pageable, 1));
+        given(articleRepository.findByHashtagNames(List.of(hashtagName) , pageable)).willReturn(new PageImpl<>(List.of(expectedArticle), pageable, 1));
 
         // When
         Page<ArticleDto> articles = sut.searchArticlesViaHashtag(hashtagName, pageable);
 
         // Then
         assertThat(articles).isEqualTo(new PageImpl<>(List.of(ArticleDto.from(expectedArticle)), pageable, 1));
-        then(articleRepository).should().findByHashtagNames(null, pageable);
+        then(articleRepository).should().findByHashtagNames(List.of(hashtagName), pageable);
     }
 
     @DisplayName("게시글 ID로 조회하면, 댓글 달긴 게시글을 반환한다.")
@@ -197,12 +197,12 @@ class ArticleServiceTest {
         ArticleDto dto = createArticleDto();
         Set<String> expectedHashtagNames = Set.of("java", "spring");
         Set<Hashtag> expectedHashtags = new HashSet<>();
-        expectedHashtags.add(Hashtag.of("java"));
+        expectedHashtags.add(createHashtag("java"));
 
         given(userAccountRepository.getReferenceById(dto.userAccountDto().userId())).willReturn(createUserAccount());
         given(hashtagService.parseHashtagNames(dto.content())).willReturn(expectedHashtagNames);
         given(hashtagService.findHashtagsByNames(expectedHashtagNames)).willReturn(expectedHashtags);
-        given(articleRepository.save(any(Article.class))).willReturn(createArticle(1L));
+        given(articleRepository.save(any(Article.class))).willReturn(createArticle());
 
         // When
         sut.saveArticle(dto);
@@ -271,7 +271,7 @@ class ArticleServiceTest {
         // Given
         Long differentArticleId = 22L;
         Article differentArticle = createArticle(differentArticleId);
-        differentArticle.setUserAccount(createUserAccount());
+        differentArticle.setUserAccount(createUserAccount("John"));
         ArticleDto dto = createArticleDto("새 타이틀", "새 내용");
         given(articleRepository.getReferenceById(differentArticleId)).willReturn(differentArticle);
         given(userAccountRepository.getReferenceById(dto.userAccountDto().userId())).willReturn(dto.userAccountDto().toEntity());
@@ -352,6 +352,10 @@ class ArticleServiceTest {
                 "Uno",
                 null
         );
+    }
+
+    private Article createArticle() {
+        return createArticle(1L);
     }
 
     private Article createArticle(Long id) {
