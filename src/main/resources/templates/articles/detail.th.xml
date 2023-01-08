@@ -11,7 +11,12 @@
         <attr sel="span.nick-name" th:text="*{nickname}"/>
         <attr sel="a.email" th:text="*{email}" href="mailto:test@mail.com"/>
         <attr sel="time" th:text="*{#temporals.format(createdAt, 'yyyy-MM-dd')}"/>
-        <attr sel="a.hashtag" th:text="*{hashtag}"/>
+        <attr sel="#hashtag" th:each="hashtag : ${article.hashtag}">
+            <attr sel="a"
+                  th:text="'#' + ${hashtag}"
+                  th:href="@{/articles(searchType=${searchTypeHashtag},searchValue=${hashtag})}"
+            />
+        </attr>
 
             <attr sel="#article-buttons" th:if="${#authorization.expression('isAuthenticated()')} and ${article.nickname} == ${#authentication.name}">
                 <attr sel="#delete-article-form" th:action="'/articles/' + ${article.id} + '/delete'" th:method="post">

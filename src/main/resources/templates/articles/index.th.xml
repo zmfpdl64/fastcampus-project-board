@@ -47,7 +47,12 @@
 
         <attr sel="#tr" th:each="article : ${articles}">
             <attr sel="td.title/a" th:text="${article.title}" th:href="|@{/articles/}${article.id}|"/>
-            <attr sel="td.hashtag" th:text="${article.hashtag}"/>
+            <attr sel="td.hashtag/span" th:each="hashtag : ${article.hashtag}">
+                <attr sel="a"
+                      th:text="'#' + ${hashtag}"
+                      th:href="@{/articles(searchType=${searchTypeHashtag},searchValue=${hashtag})}"
+                />
+            </attr>
             <attr sel="td.user-id" th:text="${article.nickname}"/>
             <attr sel="td.created-at"  th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')}"/>
         </attr>

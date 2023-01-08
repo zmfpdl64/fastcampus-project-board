@@ -24,7 +24,7 @@
                     <p><span  class="nick-name">hello</span></p>
                     <p><a  class="email" rel="me" href="mailto:djkehh@gmail.com">none@email.com</a></p>
                     <p><time th:datetime="*{createdAt}" th:text="*{#temporals.format(createdAt(), 'yyyy-MM-dd')}" datetime="2022-01-01T00:00:00">2022-01-01</time></p>
-                    <p><a class="hashtag" th:text="*{hashtag()}">#java</a></p>
+                    <p><span id="hashtag" class="badge text-bg-secondary mx-1"><a class="text-reset">#java</a></span></p>
                 </aside>
             </section>
 
