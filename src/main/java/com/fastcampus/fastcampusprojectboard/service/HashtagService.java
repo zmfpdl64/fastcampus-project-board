@@ -2,18 +2,22 @@ package com.fastcampus.fastcampusprojectboard.service;
 
 import com.fastcampus.fastcampusprojectboard.domain.Hashtag;
 import com.fastcampus.fastcampusprojectboard.repository.HashtagRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class HashtagService {
 
-    private HashtagRepository hashtagRepository;
+    private final HashtagRepository hashtagRepository;
 
     public Set<String> parseHashtagNames(String content) {
         if (content == null) {
