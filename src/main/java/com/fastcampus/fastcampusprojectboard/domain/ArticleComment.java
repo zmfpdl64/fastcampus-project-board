@@ -44,7 +44,7 @@ public class ArticleComment extends AuditingFields {
     @ToString.Exclude
     @OrderBy("createdAt ASC")
     @OneToMany(mappedBy = "parentCommentId", cascade = CascadeType.ALL)
-    private Set<ArticleComment> childComents = new LinkedHashSet<>();
+    private Set<ArticleComment> childComments = new LinkedHashSet<>();
 
     @Setter
     @ManyToOne(optional = false)
@@ -70,7 +70,7 @@ public class ArticleComment extends AuditingFields {
 
     public void addChildComment(ArticleComment child) {
         child.setParentCommentId(this.getId());
-        this.getChildComents().add(child);
+        this.getChildComments().add(child);
     }
 
     @Override
