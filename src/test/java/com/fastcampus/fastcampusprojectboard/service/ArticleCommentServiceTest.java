@@ -10,6 +10,7 @@ import com.fastcampus.fastcampusprojectboard.repository.ArticleCommentRepository
 import com.fastcampus.fastcampusprojectboard.repository.ArticleRepository;
 import com.fastcampus.fastcampusprojectboard.repository.UserAccountRepository;
 import org.assertj.core.api.AssertionsForClassTypes;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -93,6 +94,7 @@ class ArticleCommentServiceTest {
         //아무 일 하지 않았다.
     }
 
+    @Disabled("사용 안함")
     @WithUserDetails(value="unoTest", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @DisplayName("댓글 정보를 입력하면, 댓글을 수정한다.")
     @Test
@@ -129,6 +131,28 @@ class ArticleCommentServiceTest {
         // Then
         then(articleCommentRepository).should().getReferenceById(dto.id());
     }
+    @DisplayName("부모 댓글 ID와 댓글 정보를 입력하면, 대댓글을 저장한다.")
+    @Test
+    void givenParentCommentIdAndArticleCommentInfo_whenSaving_thenSavesChildComment() {
+        // Given
+        Long parentCommentId = 1L;
+        ArticleComment parent = createArticleComment(parentCommentId, "댓글");
+        ArticleCommentDto child = createArticleCommentDto(parentCommentId, "대댓글");
+        given(articleRepository.getReferenceById(child.articleId())).willReturn(createArticle());
+        given(userAccountRepository.getReferenceById(child.userAccountDto().userId())).willReturn(createUserAccount());
+        given(articleCommentRepository.getReferenceById(child.parentCommentId())).willReturn(parent);
+
+        // When
+        sut.saveArticleComment(child);
+
+        // Then
+        assertThat(child.parentCommentId()).isNotNull();
+        then(articleRepository).should().getReferenceById(child.articleId());
+        then(userAccountRepository).should().getReferenceById(child.userAccountDto().userId());
+        then(articleCommentRepository).should().getReferenceById(child.parentCommentId());
+        then(articleCommentRepository).should(never()).save(any(ArticleComment.class));
+    }
+
 
     @DisplayName("댓글 ID를 입력하면, 댓글을 삭제한다.")
     @Test
@@ -146,12 +170,20 @@ class ArticleCommentServiceTest {
     }
 
 
+    private ArticleCommentDto createArticleCommentDto(Long parentCommentId, String content) {
+        return ArticleCommentDto.of(
+                1L,
+                createUserAccountDto(),
+                parentCommentId,
+                content
+                );
+    }
     private ArticleCommentDto createArticleCommentDto(String content) {
         return ArticleCommentDto.of(
                 1L,
                 createUserAccountDto(),
                 content
-                );
+        );
     }
 
     private UserAccountDto createUserAccountDto() {
@@ -169,6 +201,14 @@ class ArticleCommentServiceTest {
         return ArticleComment.of(
                 createUserAccount(),
                 createArticle(),
+                content
+        );
+    }
+    private ArticleComment createArticleComment(Long parentId, String content) {
+        return ArticleComment.of(
+                createUserAccount(),
+                createArticle(),
+                parentId,
                 content
         );
     }

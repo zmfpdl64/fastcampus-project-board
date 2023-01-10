@@ -11,7 +11,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 
 
 @Getter
@@ -36,6 +38,15 @@ public class ArticleComment extends AuditingFields {
     UserAccount userAccount;
 
     @Setter
+    @Column(updatable = false)
+    private Long parentCommentId; //부모 댓글 ID
+
+    @ToString.Exclude
+    @OrderBy("createdAt ASC")
+    @OneToMany(mappedBy = "parentCommentId", cascade = CascadeType.ALL)
+    private Set<ArticleComment> childComments = new LinkedHashSet<>();
+
+    @Setter
     @ManyToOne(optional = false)
     private Article article;    // 게시글 (id)
     @Setter
@@ -45,15 +56,27 @@ public class ArticleComment extends AuditingFields {
     protected ArticleComment() {
     }
 
-    private ArticleComment(UserAccount userAccount, Article article, String content) {
+    private ArticleComment(UserAccount userAccount, Article article, Long parentCommentId, String content) {
         this.userAccount = userAccount;
         this.article = article;
+        this.parentCommentId = parentCommentId;
         this.content = content;
     }
     public static ArticleComment of(UserAccount userAccount,
                                     Article article,
                                     String content) {
-        return new ArticleComment(userAccount, article, content);
+        return new ArticleComment(userAccount, article, null, content);
+    }
+    public static ArticleComment of(UserAccount userAccount,
+                                    Article article,
+                                    Long parentCommentId,
+                                    String content) {
+        return new ArticleComment(userAccount, article, parentCommentId, content);
+    }
+
+    public void addChildComment(ArticleComment child) {
+        child.setParentCommentId(this.getId());
+        this.getChildComments().add(child);
     }
 
     @Override

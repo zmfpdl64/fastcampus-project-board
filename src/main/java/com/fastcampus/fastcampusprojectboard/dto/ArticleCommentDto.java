@@ -10,6 +10,7 @@ public record ArticleCommentDto(
         Long id,
         Long articleId,
         UserAccountDto userAccountDto,
+        Long parentCommentId,
         LocalDateTime createdAt,
         String createdBy,
         LocalDateTime modifiedAt,
@@ -17,18 +18,21 @@ public record ArticleCommentDto(
         String content
 ) {
 
-    public static ArticleCommentDto of(Long id, Long articleId, UserAccountDto userAccountDto, LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy, String content) {
-        return new ArticleCommentDto(id, articleId, userAccountDto, createdAt, createdBy, modifiedAt, modifiedBy, content);
+    public static ArticleCommentDto of(Long id, Long articleId, UserAccountDto userAccountDto, Long parentCommentId, LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy, String content) {
+        return new ArticleCommentDto(id, articleId, userAccountDto, parentCommentId, createdAt, createdBy, modifiedAt, modifiedBy, content);
     }
     public static ArticleCommentDto of(Long articleId, UserAccountDto userAccountDto,  String content) {
-        return new ArticleCommentDto(null, articleId, userAccountDto, null, null, null, null, content);
+        return ArticleCommentDto.of(null, articleId, userAccountDto, null, null, null, null, null, content);
     }
-
+    public static ArticleCommentDto of(Long articleId, UserAccountDto userAccountDto, Long parentCommentId,  String content) {
+        return ArticleCommentDto.of(null, articleId, userAccountDto, parentCommentId, null, null, null, null, content);
+    }
     public static ArticleCommentDto from(ArticleComment entity) {
         return new ArticleCommentDto(
                 entity.getId(),
                 entity.getArticle().getId(),
                 UserAccountDto.from(entity.getUserAccount()),
+                entity.getParentCommentId(),
                 entity.getCreatedAt(),
                 entity.getCreatedBy(),
                 entity.getModifiedAt(),
