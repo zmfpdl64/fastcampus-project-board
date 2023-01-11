@@ -21,14 +21,14 @@ public class AuditingFields {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 
     @CreatedDate
-    @Column(nullable = false, updatable = false) private LocalDateTime createdAt;    //생성시간
+    @Column(nullable = false, updatable = false) protected LocalDateTime createdAt;    //생성시간
 
     @CreatedBy
-    @Column(nullable = false, length = 100) private String createdBy;           //생성자
+    @Column(nullable = false, length = 100) protected String createdBy;           //생성자
 
     @LastModifiedDate
-    @Column(nullable = false) private LocalDateTime modifiedAt;   //수정시간
+    @Column(nullable = false) protected LocalDateTime modifiedAt;   //수정시간
 
     @LastModifiedBy
-    @Column(nullable = false, length = 100) private String modifiedBy;          //수정자
+    @Column(nullable = false, length = 100) protected String modifiedBy;          //수정자
 }
