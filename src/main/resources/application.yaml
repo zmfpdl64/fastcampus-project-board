@@ -10,7 +10,7 @@ logging:
 spring:
   datasource:
 #    url: jdbc:mysql://localhost:3306/board
-    url: jdbc:postgresql://localhost:5433/board
+    url: jdbc:postgresql://localhost:5433/postgres
 #    username: root
     username: postgres
     password: 1234
