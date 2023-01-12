@@ -2,16 +2,13 @@ package com.fastcampus.fastcampusprojectboard.controller;
 
 import com.fastcampus.fastcampusprojectboard.domain.contant.FormStatus;
 import com.fastcampus.fastcampusprojectboard.domain.contant.SearchType;
-import com.fastcampus.fastcampusprojectboard.dto.UserAccountDto;
 import com.fastcampus.fastcampusprojectboard.dto.request.ArticleRequest;
-import com.fastcampus.fastcampusprojectboard.dto.request.security.BoardPrincipal;
-import com.fastcampus.fastcampusprojectboard.dto.response.ArticleCommentResponse;
+import com.fastcampus.fastcampusprojectboard.dto.security.BoardPrincipal;
 import com.fastcampus.fastcampusprojectboard.dto.response.ArticleResponse;
 import com.fastcampus.fastcampusprojectboard.dto.response.ArticleWithCommentsResponse;
 import com.fastcampus.fastcampusprojectboard.service.ArticleService;
 import com.fastcampus.fastcampusprojectboard.service.PagenationService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
