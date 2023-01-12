@@ -1,6 +1,6 @@
 package com.fastcampus.fastcampusprojectboard.config;
 
-import com.fastcampus.fastcampusprojectboard.dto.request.security.BoardPrincipal;
+import com.fastcampus.fastcampusprojectboard.dto.security.BoardPrincipal;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
