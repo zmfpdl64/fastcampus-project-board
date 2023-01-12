@@ -60,7 +60,8 @@ dependencies {
 	//동작 helper
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-
+	//인증 oauth
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
 	implementation 'com.querydsl:querydsl-jpa'
 	implementation 'com.querydsl:querydsl-core'
