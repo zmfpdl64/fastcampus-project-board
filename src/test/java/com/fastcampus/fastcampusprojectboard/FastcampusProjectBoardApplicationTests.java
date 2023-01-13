@@ -8,11 +8,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
 import javax.transaction.Transactional;
 
+@ActiveProfiles("test")
 @SpringBootTest
-@Import(JpaConfig.class)
 @DisplayName("main")
 class FastcampusProjectBoardApplicationTests {
 
@@ -24,6 +25,11 @@ class FastcampusProjectBoardApplicationTests {
 			@Autowired ArticleCommentRepository articleCommentRepository) {
 		this.articleRepository = articleRepository;
 		this.articleCommentRepository = articleCommentRepository;
+	}
+
+	@Test
+	void contextLoads() {
+
 	}
 
 
