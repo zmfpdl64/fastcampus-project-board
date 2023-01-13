@@ -7,6 +7,10 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * 
+ * 댓글 응답 표준 포맷
+ */
 public record ArticleResponse(
         Long id,
         String title,
