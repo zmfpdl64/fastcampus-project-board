@@ -1,12 +1,17 @@
 package com.fastcampus.fastcampusprojectboard.controller;
 
+import com.fastcampus.fastcampusprojectboard.config.TestSecurityConfig;
+import com.fastcampus.fastcampusprojectboard.util.FormDataEncoder;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,8 +20,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Disabled("Spring Data Rest 통합테스트는 불필요하므로 제외시킴")
 @DisplayName("Data Rest - API 테스트")
+@ActiveProfiles("test")
 @Transactional
 @AutoConfigureMockMvc
+@Import(TestSecurityConfig.class)
+@WithMockUser
 @SpringBootTest
 public class DataRestTest {
 
@@ -98,11 +106,11 @@ public class DataRestTest {
 
 //When
         mvc.perform(get("/api/userAccounts")).andExpect(status().isNotFound());
-        mvc.perform(post("/api/userAccounts")).andExpect(status().isNotFound());
-        mvc.perform(put("/api/userAccounts")).andExpect(status().isNotFound());
-        mvc.perform(patch("/api/userAccounts")).andExpect(status().isNotFound());
-        mvc.perform(delete("/api/userAccounts")).andExpect(status().isNotFound());
-        mvc.perform(head("/api/userAccounts")).andExpect(status().isNotFound());
+        mvc.perform(post("/api/userAccounts")).andExpect(status().is4xxClientError());
+        mvc.perform(put("/api/userAccounts")).andExpect(status().is4xxClientError());
+        mvc.perform(patch("/api/userAccounts")).andExpect(status().is4xxClientError());
+        mvc.perform(delete("/api/userAccounts")).andExpect(status().is4xxClientError());
+        mvc.perform(head("/api/userAccounts")).andExpect(status().is4xxClientError());
 //Then
 
     }
