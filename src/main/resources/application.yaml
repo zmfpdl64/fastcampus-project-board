@@ -19,17 +19,17 @@ spring:
       import: vault://
   datasource:
 #  MySQL Lan
-    url: ${LOCAL_DB_URL}
-    username: ${LOCAL_DB_USERNAME}
-    password: ${LOCAL_DB_PASSWORD}
+#    url: ${LOCAL_DB_URL}
+#    username: ${LOCAL_DB_USERNAME}
+#    password: ${LOCAL_DB_PASSWORD}
   #Postgres Lan
 #    url: jdbc:postgresql://localhost:5433/postgres
 #    username: postgres
 #    password: 1234
   #MySQL Wan
-#    url: jdbc:mysql://39.115.156.83:3306/board
-#    username: woojin
-#    password:
+    url: ${WAN_DB_URL}
+    username: ${WAN_DB_USERNAME}
+    password: ${WAN_DB_PASSWORD}
   #    driver-class-name: com.mysql.cj.jdbc.Driver
 #    url: jdbc:h2:mem:testdb
 #    username: sa
