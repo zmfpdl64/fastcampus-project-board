@@ -1,3 +1,5 @@
+<img src="https://img.shields.io/badge/깃크라켄-179287?style=for-the-badge&logo=GitKraken&logoColor=white">
+
 # 게시판 서비스 - 패스트캠퍼스, 10개 프로젝트로 완성하는 백엔드 웹개발
 가장 기본적이고 보편적인 게시판 기능을 둘러볼 수 있는 서비스이며 최신 도구, 기술들을 이용해 게시판을 작성했습니다.
 
